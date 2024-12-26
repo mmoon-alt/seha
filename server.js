@@ -13,6 +13,7 @@ import indexRouter from './routes/index.js';
 import authRouter from './routes/authRoutes.js';
 import apiRouter from './routes/apiRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import { SpeedInsights } from "@vercel/speed-insights/next"; // إضافة المكون
 
 dotenv.config();
 
@@ -99,3 +100,4 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     loggerInstance.info(`Server is running on port ${PORT}`);
 });
+
