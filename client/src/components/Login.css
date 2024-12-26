@@ -1,0 +1,147 @@
+.main-background-color {
+    background-color: #F6F6F6;
+}
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #eae0e0;
+}
+.card{
+    font-family: 'Cairo', sans-serif;
+}
+.error-message{
+    font-family: 'Cairo', sans-serif;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.card {
+    background-color: white;
+    border-radius: 2px;
+    padding-top: 1px;
+    padding-bottom: 5cap;
+    padding-left: 2cap;
+    padding-right: 2cap;
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+    max-width: 330px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-top: 12cap;
+}
+.h1 {
+    color: #0957b6;
+    font-size: 26px;
+    margin-bottom: 3px;
+    text-align: center; /* تمركز النص في المنتصف */
+    margin-top: -20px; /* تقليل المسافة العلوية */
+}
+
+.highlight {
+    position: relative; /* تمكين تحديد المواقع النسبية للعنصر */
+    z-index: 1; /* ضمان أن النص يظهر فوق الخلفية */
+}
+
+.highlight::before {
+    content: '';
+    position: absolute;
+    top: 56%; /* تمركز الخلفية عموديًا */
+    left: 50%; /* تمركز الخلفية أفقيًا */
+    transform: translate(-50%, -50%); /* محاذاة الخلفية بشكل دقيق في الوسط */
+    width: 70%; /* ضبط العرض ليغطي النص بالكامل */
+    height: 0.8em; /* يمكنك تعديل هذه القيمة حسب الحاجة */
+    background-color: rgba(121, 180, 220, 0.35); /* لون الخلفية مع الشفافية بنسبة 35% */
+    z-index: -1; /* ضمان أن الخلفية تظهر خلف النص */
+}
+
+.h2 {
+    color: #737373;
+    font-size: 13px;
+    font-weight:lighter;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    text-align: center;
+    padding-right: 13px;
+}
+.error-message {
+    color: #ff0000;
+    margin-bottom: 5px; 
+    font-size: 10px; 
+    text-align: center; 
+    visibility: hidden;
+    display: flex; /* إخفاء الرسالة بشكل افتراضي */
+}
+.input-group-1 {
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative; /* للسماح بوضع رسالة الخطأ */
+    margin-top: 3cap;
+}
+
+.input-group-2 {
+    width: 100%;
+    margin-bottom: 2cap;
+    position: relative; /* للسماح بوضع رسالة الخطأ */
+
+}
+input {
+    width: 300px;
+    padding: 5px; 
+    border: 1pt solid #dfdfdf;
+    border-radius: 5px;
+    font-size: 13px; /* تصغير حجم النص */
+    font-family: cairo;
+    color: #737373;
+    transition: border-color 0.3s ease;
+    height: 20px; /* تقليل ارتفاع الحقل */
+    margin: 0px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #71bbdd;
+}
+
+button {
+    box-shadow: 0px 7px 30px -10px rgba(var(--color_primary_default_rgb), 0.1);
+    background-color: rgb(39, 104, 183);
+    font-family: Cairo;
+    font-size: 12px; /* تصغير حجم النص */
+    font-weight: normal; 
+    color: white;
+    text-align: center;
+    border: solid 1px rgb(127, 149, 235);
+    border-radius: 5px; 
+    padding: 5px 7px; 
+    opacity: 1;
+    transition: background 200ms;
+    cursor: pointer;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: auto;
+    margin-top: 1.5cap;
+    width: 95px; /* جعل الأزرار بنفس العرض */
+    height: 23pt;
+}
+
+button:hover {
+    background-color: #415184;
+}
+.password-recovery {
+    font-size: small;
+}

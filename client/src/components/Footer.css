@@ -1,0 +1,81 @@
+body {
+    font-family: 'Cairo', sans-serif;
+}
+.footer {
+    font-family: 'Cairo', sans-serif;}
+.footer {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    width: 100%;
+    background-color: #366fb5;
+    margin-top: 15cap;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-img1 {
+    height: 50px;
+    width: auto;
+    margin: 0 1px;
+    padding: 5;
+    filter: brightness(0) invert(1);
+}
+
+.footer-img2 {
+    height: 80px;
+    width: auto;
+    margin: 0 1px;
+    padding: 0rem;
+    filter: brightness(0) invert(1);
+}
+
+.vertical-line {
+    height: 50px;
+    width: 1px;
+    background-color: white;
+    border-radius: 1px;
+    margin: 0 10px;
+    margin-right: 20px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin: 1rem 0;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    gap: 5rem;
+}
+
+.footer-contact {
+    display: flex;
+    justify-content: flex-end;
+    gap: 25px;
+    margin-top: 1rem;
+    padding: 0 3rem;
+}
+
+.footer-social {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding: 0 3rem;
+}
+
+.footer-icon {
+    width: 24px;
+    height: 24px;
+    align-items: flex-start;
+}
+

@@ -1,0 +1,90 @@
+body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+}
+
+.hamburger-dropdown a {
+    font-family: 'Cairo', sans-serif; 
+}
+
+.header {
+    background-color: #e7efff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+    margin-bottom: auto;
+    height: 10%;
+}
+
+.logo {
+    height: 50px;
+    width: 100px;
+    display: flex;
+    margin-left: auto; /* لضمان أن الشعار على أقصى اليمين */
+}
+
+.hamburger {
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 35px;
+    height: 23px;
+    cursor: pointer;
+    margin-left: 1cap; /* لضمان أن أيقونة الهامبرغر على أقصى اليسار */
+}
+
+.line {
+    height: 3px;
+    width: 85%;
+    border-radius: 2px;
+    background-color: #366fb5;
+}
+
+.hamburger-dropdown {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0; /* نقل اليمين إلى 20px */
+    right: 0;
+    bottom: 0;
+    background-color: #f6f7f9;
+    z-index: 1000; 
+    animation: slideDown 0.3s ease;
+    padding: 0;
+    width: 100%;
+    max-height: 30%;
+    overflow-y: auto;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.hamburger-dropdown a {
+    display: block;
+    margin: 13px 0;
+    color: #08458f;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px; /* نقل اليمين إلى 20px */
+    left: 20px;
+    border-radius: 2px;
+    cursor: pointer;
+    color: #08458f;
+    font-size: 24px;
+}
