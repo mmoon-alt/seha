@@ -34,6 +34,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist', // تأكد أنك تستخدم المجلد الصحيح للإخراج
     rollupOptions: {
       plugins: [
         rollupNodePolyfills()
