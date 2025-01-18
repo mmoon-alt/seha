@@ -7,25 +7,25 @@ import sendSMS from '../utils/sendSMS.js';
 
 const router = express.Router();
 
-// تعريف دالة توليد رمز الخدمة
+// Function to generate a service code
 function generateServiceCode() {
   const prefix = Math.random() < 0.5 ? 'GSL' : 'PSL';
   const randomNumbers = Math.floor(1000000000 + Math.random() * 9000000000);
   return `${prefix}${randomNumbers}`;
 }
 
-// تعريف الحد من عدد الاستعلامات لكل مستخدم
+// Rate limit configuration
 const queryLimit = rateLimit({
-  windowMs: 10 * 24 * 60 * 60 * 1000, // 10 أيام
-  max: 1000, // زيادة الحد الأقصى للاستعلامات إلى 1000
-  message: 'لقد وصلت إلى الحد الأقصى للاستعلامات المسموح بها. يرجى الانتظار حتى انتهاء الفترة الزمنية.'
+  windowMs: 10 * 24 * 60 * 60 * 1000, // 10 days
+  max: 1000, // Maximum number of requests
+  message: 'You have reached the maximum number of allowed requests. Please wait until the time period ends.'
 });
 
-// إضافة إجازة (مشرفين فقط)
+// Add leave (Admins only)
 router.post('/leaves', authenticateToken, authorizeAdmin, async (req, res) => {
   try {
     console.log('Received request to add leave');
-    const { idNumber, name, servicecode, startDate, endDate, phoneNumber, sendSMS } = req.body;
+    const { idNumber, name, servicecode, startDate, endDate, phoneNumber, sendSMS: shouldSendSMS } = req.body;
     console.log('Request Body:', req.body);
 
     if (!idNumber || !name || !servicecode || !phoneNumber) {
@@ -55,7 +55,7 @@ router.post('/leaves', authenticateToken, authorizeAdmin, async (req, res) => {
     const savedLeave = await leave.save();
     console.log('Saved leave:', savedLeave);
 
-    if (sendSMS) {
+    if (shouldSendSMS) {
       const smsMessage = `خطاك السوء، ${leave.name.split(' ')[0]} تم إصدار إجازة مرضية برقم ${leave.serviceCode} لمدة ${leave.leaveDuration} يوما. ويمكنك الاطلاع عليها عبر تطبيق صحتي. دمتم بصحة.`;
       await sendSMS(phoneNumber, smsMessage);
     }
@@ -64,37 +64,37 @@ router.post('/leaves', authenticateToken, authorizeAdmin, async (req, res) => {
   } catch (error) {
     console.error('Error while adding leave:', error);
     if (error.code === 11000) {
-      res.status(400).json({ message: 'خطأ: يوجد إدخال مكرر في الحقول الفريدة.' });
+      res.status(400).json({ message: 'Error: Duplicate entry in unique fields.' });
     } else {
-      res.status(500).json({ message: 'حدث خطأ أثناء إضافة الإجازة' });
+      res.status(500).json({ message: 'An error occurred while adding the leave' });
     }
   }
 });
 
-// استرجاع إجازات المستخدم حسب idNumber
+// Retrieve user leaves by idNumber
 router.get('/user-leaves', authenticateToken, async (req, res) => {
   try {
     const { idNumber, servicecode } = req.query;
     console.log('Received request to fetch leaves with:', { idNumber, servicecode });
 
     if (!idNumber || !servicecode) {
-      return res.status(400).json({ message: 'رقم الهوية ورمز الخدمة مطلوبان' });
+      return res.status(400).json({ message: 'ID number and service code are required' });
     }
 
     const leaves = await Leave.find({ idNumber, servicecode });
     if (leaves.length === 0) {
-      return res.status(404).json({ message: 'لم يتم العثور على إجازات للمستخدم' });
+      return res.status(404).json({ message: 'No leaves found for the user' });
     }
 
     console.log('Fetched leaves:', leaves);
     res.json(leaves);
   } catch (error) {
     console.error('Error while retrieving user leaves:', error);
-    res.status(500).json({ message: 'حدث خطأ في الخادم' });
+    res.status(500).json({ message: 'Server error occurred' });
   }
 });
 
-// تحديث إجازة (مشرفين فقط)
+// Update leave (Admins only)
 router.put('/leaves/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   try {
     if (!req.params.id || !req.body) {
@@ -104,11 +104,11 @@ router.put('/leaves/:id', authenticateToken, authorizeAdmin, async (req, res) =>
     res.json(leave);
   } catch (error) {
     console.error('Error while updating leave:', error);
-    res.status(500).json({ message: 'حدث خطأ أثناء تحديث الإجازة' });
+    res.status(500).json({ message: 'An error occurred while updating the leave' });
   }
 });
 
-// حذف إجازة (مشرفين فقط)
+// Delete leave (Admins only)
 router.delete('/leaves/:id', authenticateToken, authorizeAdmin, async (req, res) => {
   try {
     if (!req.params.id) {
@@ -118,11 +118,11 @@ router.delete('/leaves/:id', authenticateToken, authorizeAdmin, async (req, res)
     res.status(204).send();
   } catch (error) {
     console.error('Error while deleting leave:', error);
-    res.status(500).json({ message: 'حدث خطأ أثناء حذف الإجازة' });
+    res.status(500).json({ message: 'An error occurred while deleting the leave' });
   }
 });
 
-// تعريف قائمة انتظار الطلبات
+// Define request queue
 router.requestQueue = new Set();
 
 export default router;
