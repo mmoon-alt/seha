@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "babel src -d dist",
+    "build": "react-scripts build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -16,7 +16,8 @@
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
