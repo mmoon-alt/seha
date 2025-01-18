@@ -4,37 +4,34 @@ body {
 }
 
 .hamburger-dropdown a {
-    font-family: 'Cairo', sans-serif; 
+    font-family: 'Cairo', sans-serif;
 }
 
 .header {
-    background-color: #e7efff;
+    background-color: #f6f6f6;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 20px;
-    margin: 0;
-    margin-bottom: auto;
-    height: 10%;
+    padding: 20px 0px 20px 0px;
+    margin: 0 0 0 0;
 }
-
 .logo {
+    align-self: flex-end;
+    padding: 0px 20px 0px 0px;
     height: 50px;
-    width: 100px;
     display: flex;
     margin-left: auto; /* لضمان أن الشعار على أقصى اليمين */
 }
 
 .hamburger {
     display: flex;
-    -ms-flex-direction: column;
+    align-self: center;
     flex-direction: column;
     justify-content: space-between;
     width: 35px;
     height: 23px;
     cursor: pointer;
-    margin-left: 1cap; /* لضمان أن أيقونة الهامبرغر على أقصى اليسار */
+    padding-left: 25px;
 }
 
 .line {
@@ -52,7 +49,7 @@ body {
     right: 0;
     bottom: 0;
     background-color: #f6f7f9;
-    z-index: 1000; 
+    z-index: 1000;
     animation: slideDown 0.3s ease;
     padding: 0;
     width: 100%;
@@ -82,9 +79,10 @@ body {
 .close-btn {
     position: absolute;
     top: 20px; /* نقل اليمين إلى 20px */
-    left: 20px;
+    left: 30px;
     border-radius: 2px;
     cursor: pointer;
     color: #08458f;
     font-size: 24px;
+    padding: 0px 0px 0px 20px;
 }

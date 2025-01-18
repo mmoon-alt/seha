@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Login from './components/Login.jsx';
 import DataDisplay from './components/DataDisplay.jsx';
@@ -8,6 +8,14 @@ import AdminDashboard from './components/AdminDashboard.jsx';
 import './App.css';
 import { addLeave, updateLeave, deleteLeave, fetchLeaves, login } from './api';
 import jwt from 'jsonwebtoken';
+
+const usePrevious = (value) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+};
 
 const App = () => {
   const [token, setToken] = useState(() => localStorage.getItem('token') || '');
@@ -31,6 +39,9 @@ const App = () => {
   const [servicecode, setServicecode] = useState('');
   const navigate = useNavigate();
 
+  const previousIdNumber = usePrevious(idNumber);
+  const previousServicecode = usePrevious(servicecode);
+
   const handleLoginSuccess = useCallback(async (token, idNumber, servicecode, role) => {
     if (role === 'admin') {
       setToken(token);
@@ -40,11 +51,14 @@ const App = () => {
     } else {
       try {
         const leavesData = await fetchLeaves(idNumber, servicecode, token);
+        console.log('Fetched leaves:', leavesData);
         setLeaves(leavesData);
+        setIdNumber(idNumber);
+        setServicecode(servicecode);
         navigate("/data-display");
       } catch (error) {
         setErrorMessage('فشل في جلب بيانات الإجازات');
-        console.error(error.message);
+        console.error('Error fetching leaves:', error);
       }
     }
   }, [navigate]);
@@ -146,39 +160,42 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="app-container">
       <Header />
       {errorMessage && (
         <div className="error">
           {errorMessage}
         </div>
       )}
-      <Routes>
-        <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-        <Route path="/auth/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-        <Route path="/data-display" element={<DataDisplay idNumber={idNumber} servicecode={servicecode} onFetchLeaves={loadLeaves} />} />
-        <Route
-          path="/admin-dashboard"
-          element={
-            isAdmin ? (
-              <AdminDashboard
-                token={token}
-                leaves={filteredLeaves}
-                setLeaves={setLeaves}
-                loading={loading}
-                errorMessage={errorMessage}
-                handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
-                handleDelete={handleDelete}
-                handleUpdate={handleUpdate}
-                servicecode={newServiceCode}
-              />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-      </Routes>
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/auth/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/data-display" element={<DataDisplay idNumber={idNumber} servicecode={servicecode} />} />
+          <Route
+            path="/admin-dashboard"
+            element={
+              isAdmin ? (
+                <AdminDashboard
+                  token={token}
+                  leaves={filteredLeaves}
+                  setLeaves={setLeaves}
+                  loading={loading}
+                  errorMessage={errorMessage}
+                  handleInputChange={handleInputChange}
+                  handleSubmit={handleSubmit}
+                  handleDelete={handleDelete}
+                  handleUpdate={handleUpdate}
+                  servicecode={newServiceCode}
+                />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route path="/table.html" element={<div />} />
+        </Routes>
+      </div>
       <Footer />
     </div>
   );

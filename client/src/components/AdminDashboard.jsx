@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { fetchLeaves, addLeave, updateLeave, deleteLeave, addAdmin } from '../api';
 import jwt from 'jsonwebtoken';
@@ -23,7 +23,7 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
   });
   const [fetchIdNumber, setFetchIdNumber] = useState('');
   const [editingLeave, setEditingLeave] = useState(null); // حالة التعديل
-  const [editingValue, setEditingValue] = useState(''); // قيمة التعديل
+  const [editingValue, setEditingValue] = useState({}); // قيمة التعديل
   const [sendSMS, setSendSMS] = useState(false); // خيار إرسال الرسالة
 
   const handleInputChange = (e) => {
@@ -35,7 +35,7 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
   };
 
   const handleEditChange = (e) => {
-    setEditingValue(e.target.value);
+    setEditingValue({ ...editingValue, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -46,17 +46,17 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
     }
 
     const leaveDuration = Math.ceil((new Date(formData.endDate) - new Date(formData.startDate)) / (1000 * 60 * 60 * 24));
-    const updatedFormData = { ...formData, leaveDuration, sendSMS }; // تضمين خيار إرسال الرسالة
+    const updatedFormData = { ...formData, leaveDuration };
 
     try {
-      const data = await addLeave(updatedFormData);
+      const data = await addLeave(updatedFormData, token); // مباشرةً إضافة الإجازة بدون تحقق
       setLeaves(prevLeaves => [...prevLeaves, data]);
       setNewServiceCode(data.servicecode);
       resetForm();
-      alert(sendSMS ? "تم رفع الإجازة وإرسال الرسالة بنجاح!" : "تم رفع الإجازة بنجاح!");
-    } catch (error) {
-      console.error('Error adding leave:', error);
-      alert("فشل في إضافة الإجازة");
+      alert("تم رفع الإجازة بنجاح!");
+    } catch (err) {
+      setErrorMessage('فشل في إضافة الإجازة');
+      console.error(err.message);
     }
   };
 
@@ -101,17 +101,43 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
 
   const cancelEditing = () => {
     setEditingLeave(null);
-    setEditingValue('');
+    setEditingValue({});
   };
 
-  const loadLeaves = useCallback(async () => {
+  useEffect(() => {
+    const loadLeaves = async () => {
+      try {
+        const data = await fetchLeaves(fetchIdNumber, formData.servicecode);
+        setFormData({
+          idNumber: data.idNumber,
+          servicecode: data.servicecode,
+          name: data.name,
+          issueDate: data.issueDate,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          leaveDuration: data.leaveDuration,
+          doctorName: data.doctorName,
+          jobTitle: data.jobTitle,
+          phoneNumber: data.phoneNumber
+        });
+      } catch (error) {
+        console.error('Error fetching leaves:', error);
+      }
+    };
+
+    if (fetchIdNumber && formData.servicecode) {
+      loadLeaves();
+    }
+  }, [fetchIdNumber, formData.servicecode]);
+
+  const loadLeavesCallback = useCallback(async () => {
     try {
-      const data = await fetchLeaves(fetchIdNumber);
+      const data = await fetchLeaves(fetchIdNumber, formData.servicecode);
       setLeaves(data);
     } catch (error) {
       console.error('Error fetching leaves:', error);
     }
-  }, [fetchIdNumber, setLeaves]);
+  }, [fetchIdNumber, formData.servicecode, setLeaves]);
 
   const resetForm = () => {
     setFormData({
@@ -193,7 +219,7 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
           </div>
           <div>
             <label>هل تريد إرسال رسالة لهذا المستخدم؟</label>
-            <div>
+                         <div>
               <label>
                 <input
                   type="radio"
@@ -216,23 +242,32 @@ const AdminDashboard = ({ token, leaves, setLeaves, loading, errorMessage }) => 
               </label>
             </div>
           </div>
-           <button type="submit" disabled={loading}>إضافة الإجازة</button>
+          <button type="submit" disabled={loading}>إضافة الإجازة</button>
         </form>
       )}
       {newServiceCode === 'manageLeaves' && (
         <div>
           <input type="text" placeholder="أدخل رقم الهوية" onChange={(e) => setFetchIdNumber(e.target.value)} />
           <input type="text" placeholder="أدخل رمز الخدمة" onChange={(e) => setFormData({ ...formData, servicecode: e.target.value })} />
-          <button onClick={loadLeaves}>جلب الإجازات</button>
+          <button onClick={loadLeavesCallback}>جلب الإجازات</button>
           <ul>
             {leaves.map(leave => (
               <li key={leave._id}>
                 {leave.name} - {new Date(leave.startDate).toLocaleDateString('en-GB')} إلى {new Date(leave.endDate).toLocaleDateString('en-GB')}
                 {editingLeave === leave._id ? (
                   <div>
+                    <input type="text" name="servicecode" value={editingValue.servicecode} onChange={handleEditChange} />
                     <input type="text" name="name" value={editingValue.name} onChange={handleEditChange} />
+                    <input type="date" name="issueDate" value={editingValue.issueDate} onChange={handleEditChange} />
+                    <input type="date" name="startDate" value={editingValue.startDate} onChange={handleEditChange} />
+                    <input type="date" name="endDate" value={editingValue.endDate} onChange={handleEditChange} />
+                    <input type="number" name="leaveDuration" value={editingValue.leaveDuration} onChange={handleEditChange} />
+                    <input type="text" name="doctorName" value={editingValue.doctorName} onChange={handleEditChange} />
+                    <input type="text" name="jobTitle" value={editingValue.jobTitle} onChange={handleEditChange} />
+                    <input type="number" name="phoneNumber" value={editingValue.phoneNumber} onChange={handleEditChange} />
                     <button onClick={() => handleUpdate(leave._id)}>تحديث</button>
                     <button onClick={cancelEditing}>إلغاء</button>
+
                   </div>
                 ) : (
                   <>

@@ -3,7 +3,7 @@ import Leave from '../models/Leave.js';
 import User from '../models/User.js';
 import { authenticateToken, authorizeAdmin } from '../middleware/auth.js';
 import rateLimit from 'express-rate-limit';
-import sendSMS from '../utils/sendSMS.js'; // استيراد sendSMS
+import sendSMS from '../utils/sendSMS.js';
 
 const router = express.Router();
 
@@ -16,8 +16,8 @@ function generateServiceCode() {
 
 // تعريف الحد من عدد الاستعلامات لكل مستخدم
 const queryLimit = rateLimit({
-  windowMs: 10 * 24 * 60 * 60 * 1000,
-  max: 30,
+  windowMs: 10 * 24 * 60 * 60 * 1000, // 10 أيام
+  max: 1000, // زيادة الحد الأقصى للاستعلامات إلى 1000
   message: 'لقد وصلت إلى الحد الأقصى للاستعلامات المسموح بها. يرجى الانتظار حتى انتهاء الفترة الزمنية.'
 });
 
@@ -56,7 +56,7 @@ router.post('/leaves', authenticateToken, authorizeAdmin, async (req, res) => {
     console.log('Saved leave:', savedLeave);
 
     if (sendSMS) {
-      const smsMessage = `خطاك السوء، ${leave.name.split(' ')[0]} تم إصدار إجازة مرضية ل برقم ${leave.serviceCode} لمدة ${leave.leaveDuration} يوما. ويمكنك الإطلاع عليها عبر تطبيق صحتي، دمتم بصحة.`;
+      const smsMessage = `خطاك السوء، ${leave.name.split(' ')[0]} تم إصدار إجازة مرضية برقم ${leave.serviceCode} لمدة ${leave.leaveDuration} يوما. ويمكنك الاطلاع عليها عبر تطبيق صحتي. دمتم بصحة.`;
       await sendSMS(phoneNumber, smsMessage);
     }
 
@@ -74,11 +74,18 @@ router.post('/leaves', authenticateToken, authorizeAdmin, async (req, res) => {
 // استرجاع إجازات المستخدم حسب idNumber
 router.get('/user-leaves', authenticateToken, async (req, res) => {
   try {
-    const { idNumber } = req.query;
-    if (!idNumber) {
-      return res.status(400).json({ message: 'رقم الهوية مطلوب' });
+    const { idNumber, servicecode } = req.query;
+    console.log('Received request to fetch leaves with:', { idNumber, servicecode });
+
+    if (!idNumber || !servicecode) {
+      return res.status(400).json({ message: 'رقم الهوية ورمز الخدمة مطلوبان' });
     }
-    const leaves = await Leave.find({ idNumber });
+
+    const leaves = await Leave.find({ idNumber, servicecode });
+    if (leaves.length === 0) {
+      return res.status(404).json({ message: 'لم يتم العثور على إجازات للمستخدم' });
+    }
+
     console.log('Fetched leaves:', leaves);
     res.json(leaves);
   } catch (error) {
@@ -114,5 +121,8 @@ router.delete('/leaves/:id', authenticateToken, authorizeAdmin, async (req, res)
     res.status(500).json({ message: 'حدث خطأ أثناء حذف الإجازة' });
   }
 });
+
+// تعريف قائمة انتظار الطلبات
+router.requestQueue = new Set();
 
 export default router;

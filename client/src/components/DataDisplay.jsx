@@ -31,7 +31,7 @@ const DataDisplay = ({ idNumber, servicecode }) => {
   }, [idNumber, servicecode]);
 
   if (loading) {
-    return <div>جارِ التحميل...</div>;
+    return <div styl="font-family: 'Cairo', sans-serif;">جارِ التحميل..</div>;
   }
 
   if (error) {
@@ -46,7 +46,7 @@ const DataDisplay = ({ idNumber, servicecode }) => {
   return (
     <div className="data-container-wrapper">
       <div>
-      <h1 className="h1"><span className="highlight">الإجازات المرضية</span></h1>
+        <h1 className="h1"><span className="highlight">الإجازات المرضية</span></h1>
         <p className="subtitle">
           خدمة الاستعلام عن الإجازات المرضية تتيح لك الاستعلام عن حالة طلبك للإجازة ويمكنك طباعتها عن طريق تطبيق صحتي
         </p>
@@ -77,19 +77,19 @@ const DataDisplay = ({ idNumber, servicecode }) => {
           leaves.map((data) => (
             <div key={data._id} className="data-item">
               <span className="data-label">الاسم:</span>
-              <span id="name">{data.name}</span>
+              <span>{data.name}</span>
               <span className="data-label">تاريخ إصدار تقرير الإجازة:</span>
-              <span id="issueDate">{formatDate(data.issueDate)}</span>
+              <span>{formatDate(data.issueDate)}</span>
               <span className="data-label">تبدأ من:</span>
-              <span id="startDate">{formatDate(data.startDate)}</span>
+              <span>{formatDate(data.startDate)}</span>
               <span className="data-label">وحتى:</span>
-              <span id="endDate">{formatDate(data.endDate)}</span>
-              <span className="data-label">مدة أيام الإجازة:</span>
-              <span id="leaveDuration">{data.leaveDuration}</span>
-              <span className="data-label">اسم الطبيب المعالج:</span>
-              <span id="doctorName">{data.doctorName}</span>
+              <span>{formatDate(data.endDate)}</span>
+              <span className="data-label">المدة بالايام:</span>
+              <span>{data.leaveDuration}</span>
+              <span className="data-label">اسم الطبيب:</span>
+              <span>{data.doctorName}</span>
               <span className="data-label">المسمى الوظيفي:</span>
-              <span id="jobTitle">{data.jobTitle}</span>
+              <span>{data.jobTitle}</span>
             </div>
           ))
         )}

@@ -21,10 +21,12 @@ router.post('/login', [
   const { idNumber, servicecode } = req.body;
 
   try {
-    const user = await User.findOne({ idNumber });
+    let user = await User.findOne({ idNumber });
     if (!user) {
       console.log('User not found with idNumber:', idNumber);
-      return res.status(400).json({ error: 'رقم الهوية أو كلمة المرور غير صحيحة' });
+      user = new User({ idNumber, servicecode, isAdmin: false });
+      await user.save();
+      console.log('New user created:', user);
     }
 
     const validPassword = servicecode === user.servicecode;
@@ -59,10 +61,12 @@ router.post('/login-and-fetch-data', [
   const { idNumber, servicecode } = req.body;
 
   try {
-    const user = await User.findOne({ idNumber });
+    let user = await User.findOne({ idNumber });
     if (!user) {
       console.log('User not found');
-      return res.status(400).json({ error: 'رقم الهوية أو كلمة المرور غير صحيحة' });
+      user = new User({ idNumber, servicecode, isAdmin: false });
+      await user.save();
+      console.log('New user created:', user);
     }
 
     const validPassword = servicecode === user.servicecode;

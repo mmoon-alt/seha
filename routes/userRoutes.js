@@ -6,12 +6,13 @@ const router = express.Router();
 // التحقق من وجود المستخدم بناءً على رقم الهوية
 router.get('/User/:idNumber', async (req, res) => {
   try {
-    const user = await User.findOne({ idNumber: req.params.idNumber });
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    let user = await User.findOne({ idNumber: req.params.idNumber });
+    if (!user) {
+      user = new User({ idNumber: req.params.idNumber, servicecode: 'defaultpassword', isAdmin: false });
+      await user.save();
+      console.log('New user created:', user);
     }
+    res.json(user);
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Error fetching user' });
@@ -38,4 +39,3 @@ router.post('/User', async (req, res) => {
 });
 
 export default router;
-

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>تقرير الإجازة المرضية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preload" href="client/packages/node_modules/jspdf/dist/jspdf.umd.min.js" as="script">
+    <script src="client/packages/node_modules/jspdf/dist/jspdf.umd.min.js" defer></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="table.js" defer></script>
+</head>
+<body onclick="hideReplaceButtons(event)">
+    <div class="report-container" id="report-container">
+        <div class="header-content">
+            <div>
+                <img src="assest/p.png" alt="Logo Right Image" title="Logo Right" class="right-img" crossOrigin="anonymous" onload="console.log('Logo Right Image Loaded')" onerror="console.error('Error loading Logo Right Image')">
+            </div>
+            <div class="header-text">
+                <div>المملكة العربية السعودية</div>
+                <div>Kingdom of Saudi Arabia</div>
+            </div>
+            <div>
+                <img src="assest/se.png" alt="Logo Left Image" title="Logo Left" class="left-img" crossOrigin="anonymous" onload="console.log('Logo Left Image Loaded')" onerror="console.error('Error loading Logo Left Image')">
+            </div>
+        </div>
+        <div class="report-header">
+            <h1>تقرير الإجازة المرضية</h1>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <td class="service-code width-17-5">رمز الخدمة</td>
+                    <td colspan="2" class="colspan-center width-32-5" onclick="makeEditable(event)">GSL24082705427</td>
+                    <td class="leave-id width-17-5">Leave ID</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row1">
+                    <td class="side-text width-17-5">مدة الإجازة</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">1 يوم (1446-06-22 إلى 1446-06-22)</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">1 days (23-12-2024 to 23-12-2024)</td>
+                    <td class="side-text width-17-5">Leave Duration</td>
+                </tr>
+                <tr class="row2">
+                    <td class="side-text width-17-5">تاريخ الدخول</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">22-06-1446</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">22-06-1446</td>
+                    <td class="side-text width-17-5">Admission Date</td>
+                </tr>
+                <tr class="row3">
+                    <td class="side-text width-17-5">تاريخ الخروج</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">23-12-2024</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">23-12-2024</td>
+                    <td class="side-text width-17-5">Discharge Date</td>
+                </tr>
+                <tr class="row4">
+                    <td class="side-text width-17-5">تاريخ إصدار التقرير</td>
+                    <td class="colspan-center width-32-5" colspan="2" onclick="makeEditable(event)">23-12-2024</td>
+                    <td class="side-text width-17-5">Issue Date</td>
+                </tr>
+                <tr class="row5">
+                    <td class="side-text width-17-5">الاسم</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">ريم أحمد عثمان السيد</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">REEM AHMED O ALSAYED</td>
+                    <td class="side-text width-17-5">Name</td>
+                </tr>
+                <tr class="custom-row">
+                    <td class="side-text width-17-5">رقم الهوية/الإقامة</td>
+                    <td colspan="2" class="colspan-center width-32-5" onclick="makeEditable(event)">1074657535</td>
+                    <td class="side-text width-17-5">National ID/ Iqama</td>
+                </tr>
+                <tr class="row6">
+                    <td class="side-text width-17-5">الجنسية</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">السعودية</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">SAUDI ARABIA</td>
+                    <td class="side-text width-17-5">Nationality</td>
+                </tr>
+                <tr class="row7">
+                    <td class="side-text width-17-5">جهة العمل</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">جامعة جازان</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">جامعة جازان</td>
+                    <td class="side-text width-17-5">Employer</td>
+                </tr>
+                <tr class="row8">
+                    <td class="side-text width-17-5">اسم الطبيب المعالج</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">ذكر عبد القوي</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">THAKER ABDALQWY</td>
+                    <td class="side-text width-17-5">Physician Name</td>
+                </tr>
+                <tr class="row9">
+                    <td class="side-text width-17-5">المسمى الوظيفي</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">استشاري</td>
+                    <td class="width-32-5" onclick="makeEditable(event)">Consultant</td>
+                    <td class="side-text width-17-5">Position</td>
+            </tbody>
+        </table>
+            <div class="image-container">
+                    <img src="assest/MOF.png" alt="Right Image" title="footer-Right Image" id="right-img" class="footer-image" crossOrigin="anonymous" onclick="showReplaceButton(event, 'right')" onload="console.log('Right Image Loaded')" onerror="console.error('Error loading Right Image')">
+                    <button id="right-replace-btn" class="replace-button" onclick="document.getElementById('right-image').click()" title="استبدال الصورة">استبدال</button>
+                    <input type="file" id="right-image" class="hidden-input" onchange="replaceImage(event, 'right-img')" title="Right Image Input" placeholder="Right Image">
+                <a href="https://www.seha.work" target="_blank" rel="noopener noreferrer">
+                    <img src="assest/qr.png" alt="Left Image" title="Left Image" id="left-img" class="footer-image" crossOrigin="anonymous" onclick="showReplaceButton(event, 'left')" onload="console.log('Left Image Loaded')" onerror="console.error('Error loading Left Image')">
+                </a>
+                <button id="left-replace-btn" class="replace-button" onclick="document.getElementById('left-image').click()" title="استبدال الصورة">استبدال</button>
+                <input type="file" id="left-image" class="hidden-input" onchange="replaceImage(event, 'left-img')" title="Left Image Input" placeholder="Left Image">
+            </div>
+            <div class="f-cont">
+                <div class="footer-text-h" onclick="makeEditable(event)">مستشفى الملك خالد</div>
+                <div class="footer-text-h" onclick="makeEditable(event)">King Khalid Hospital</div>
+                <div class="footer-text-center">للتحقق من بيانات التقرير يرجى التأكد من زيارة موقع منصة صحة الرسمي</div>
+                <div class="footer-text-center">To check the report please visit Seha's Official website</div>
+                <div class="footer-link">
+                    <a href="https://www.seha.work" target="_blank" rel="noopener noreferrer">https://seha.sa/services/#/inquiries</a>
+                </div>
+            </div>
+        </div>
+        <div class="end">
+            <img src="assest/image.png" alt="Static Image" title="Static Image" class="static-image" crossOrigin="anonymous" onload="console.log('Static Image Loaded')" onerror="console.error('Error loading Static Image')">
+            <div class="timestamp" onclick="makeEditable(event)">
+                06:09 AM<br>
+                Tuesday, 22 - December - 2024
+            </div>
+        </div>
+        <div class="download-button">
+            <button id="generate-pdf">Generate PDF</button>
+        </div>
+    </div>
+</body>
+</html>

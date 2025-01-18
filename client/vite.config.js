@@ -45,22 +45,19 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://seha.work',
+        target: 'http://127.0.0.1:4000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
       '/auth': {
-        target: 'https://seha.work',
+        target: 'http://127.0.0.1:4000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
     },
-    hmr: {
-      protocol: 'wss',
-      host: 'www.seha.work',
-      clientPort: 443,
-      port: 5173,  // استخدام منفذ مختلف
-    },
+    fs: {
+      allow: ['client/public/sehaAp']
+    }
   },
   assetsInclude: ['**/*.html'],
 });
