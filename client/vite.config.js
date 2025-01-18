@@ -5,7 +5,7 @@ import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfil
 import rollupNodePolyfills from 'rollup-plugin-node-polyfills';
 
 export default defineConfig({
-  base: '/',
+  base: '',
   plugins: [
     react(),
     NodeGlobalsPolyfillPlugin({
@@ -34,11 +34,16 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'build', // تأكد أنك تستخدم المجلد الصحيح للإخراج
+    outDir: 'client/build',
     rollupOptions: {
       plugins: [
         rollupNodePolyfills()
-      ]
+      ],
+      output: {
+        assetFileNames: 'assets/[name][extname]',
+        chunkFileNames: 'assets/[name].js',
+        entryFileNames: 'assets/[name].js',
+      }
     }
   },
   server: {
